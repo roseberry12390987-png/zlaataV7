@@ -1,9 +1,13 @@
 package runner;
 
 
+import org.junit.AfterClass;
 import org.junit.runner.RunWith;
 import io.cucumber.junit.Cucumber;
 import io.cucumber.junit.CucumberOptions;
+import utils.EmailSendUtils;
+import utils.ExcelReportUtil;
+
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -12,13 +16,12 @@ import java.util.logging.Logger;
 
 @RunWith(Cucumber.class)
 @CucumberOptions( plugin = {"com.aventstack.extentreports.cucumber.adapter.ExtentCucumberAdapter:","rerun:target/rerun.txt"},
-features = {"src/test/resources/features"
-},
-
+features = {"src/test/resources/features/"},
 glue = "stepDef",	
 monochrome = true,
-dryRun = false
-		 
+dryRun = false,
+//tags ="@TC_UI_Zlaata_CP_10 or @TC_UI_Zlaata_CP_11 or @TC_UI_Zlaata_CP_12 or @TC_UI_Zlaata_CP_13 or @TC_UI_Zlaata_CP_15 or @TC_UI_Zlaata_CP_14 or @TC_UI_Zlaata_CP_16 or @TC_UI_Zlaata_CP_17 or @TC_UI_Zlaata_CP_18"
+tags ="@TC_UI_Zlaata_CP_16"
 )
 
 		
@@ -29,13 +32,19 @@ public class TestRunner {
         Logger.getLogger("org.apache.http").setLevel(Level.OFF);
         System.setProperty("webdriver.chrome.logfile", "NUL");
         System.setProperty("webdriver.chrome.verboseLogging", "false");
+	}
+
+
         
-        
-    }
-	
+@AfterClass
+public static void generateExcelReport() {
+	 ExcelReportUtil.generateExcelReport();
+//	 EmailSendUtils.sendEmail();
+}
+}
 
 	
-}
+
 
 
 

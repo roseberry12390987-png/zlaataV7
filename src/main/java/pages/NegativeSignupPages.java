@@ -1,7 +1,9 @@
 package pages;
 	
 
+import java.util.HashSet;
 import java.util.Random;
+import java.util.Set;
 import java.util.concurrent.TimeoutException;
 import org.junit.Assert;
 import org.openqa.selenium.By;
@@ -33,13 +35,15 @@ private WebDriver driver;
 	public void launchZltV7() {
 	
         driver.get(FileReaderManager.getInstance().getConfigReader().getApplicationUrl());
-        type(accessCode, FileReaderManager.getInstance().getJsonReader().getValueFromJson("Access"));
-        click(submit);
+//        type(accessCode, FileReaderManager.getInstance().getJsonReader().getValueFromJson("Access"));
+//        click(submit);
         popup();
     }
 	private void popup() {
 		try {
-			WebElement popUp = driver.findElement(By.xpath("(//button[@class='close-btn'])[1]"));
+			WebElement popUp = driver.findElement(By.xpath("//button[@class='close-btn']"));
+			Common.waitForElement(5);
+			
 			
 			if (popUp.isDisplayed()) {
 				popUp.click();
@@ -50,6 +54,22 @@ private WebDriver driver;
 		}
 		
 	}
+	
+	 private static Set<String> generatedNumbers = new HashSet<>();
+	    private static Random rnd = new Random();
+
+	    public static String generateUniqueUserNumber() {
+	        String userNumber;
+	        do {
+	            long n = 1000000000L + (long)(rnd.nextDouble() * 9000000000L);
+	            userNumber = n + DateUtils.getCurrentLocalDateTimeStamp("yyyyMMdd");
+	        } while (generatedNumbers.contains(userNumber)); // retry if already generated
+
+	        generatedNumbers.add(userNumber); // store it
+	      //  System.out.println("Generated unique user number: " + userNumber);
+	        return userNumber;
+	    }
+	    
 	public void ClickProfileIcon() {
 		click(profile);
 		
@@ -66,15 +86,20 @@ private WebDriver driver;
 	}
 
 
+//	public void userNumber() {
+//		Random rnd = new Random();
+//		int n = 66666 + rnd.nextInt(99999);
+//		Common.waitForElement(10);
+//		String userNumber = n + DateUtils.getCurrentLocalDateTimeStamp("YYYYMMdd");
+//		 type(number,userNumber);
+//		 
+//		 
+//	}
 	public void userNumber() {
-		Random rnd = new Random();
-		int n = 66666 + rnd.nextInt(99999);
-		Common.waitForElement(10);
-		String userNumber = n + DateUtils.getCurrentLocalDateTimeStamp("YYYYMMdd");
-		 type(number,userNumber);
-		 
-		 
-	}
+        Common.waitForElement(10);
+        String userNumber = generateUniqueUserNumber();
+        type(number, userNumber);
+    }
 
 
 	public void contbtn() {
@@ -83,6 +108,31 @@ private WebDriver driver;
 	
 	}
 	
+	public void signUp() {
+		driver.get(FileReaderManager.getInstance().getConfigReader().getApplicationUrl());
+//		type(accessCode, FileReaderManager.getInstance().getJsonReader().getValueFromJson("Access"));
+//		click(submit);	
+		click(profile);
+		
+		click(signupButton);
+
+		type(name, FileReaderManager.getInstance().getJsonReader().getValueFromJson("UserName"));
+
+		// enter number
+		userNumber();
+		click(continueButton);
+
+		// check if validation error appears
+		if (!driver.findElements(By.xpath("//span[@class='error__msg phone_error_msg active']")).isEmpty()) {
+		    number.clear();
+		    userNumber();
+		    click(continueButton);
+		}
+
+		// enter OTP
+		type(otp, FileReaderManager.getInstance().getJsonReader().getValueFromJson("OTP"));
+		click(verify);
+	}
 	public void nametxtBoxEmpty() {
 	    contbtn();
 	    String actualMessage = validationMsgName.getText();
@@ -219,7 +269,7 @@ private WebDriver driver;
 	    contbtn();
 //	    Common.waitForElement(5);
 	    String uiData = number.getAttribute("value");
-	    String actualMessage = alreadyUsedNumber.getText();
+	    String actualMessage = validationMsgNumber.getText();
 	    System.out.println("📤 Application UI Data: " + uiData + " | Length: " + uiData.length());
 //	    System.out.println("📤 Validation Message: " + actualMessage);
 	    System.out.println("\u001B[32m📤 Validation Message: " + actualMessage + "\u001B[0m");
@@ -333,6 +383,12 @@ public void leftAllMandatory() {
 	}
 	
 	public void invalidOTP() {
+		
+		
+		
+		String excelData = Common.getValueFromTestDataMap("Mobile Number");
+	    System.out.println("📥 Excel Data: " + excelData + " | Length: " + excelData.length());
+	    type(number, excelData);
 	    String value = Common.getValueFromTestDataMap("OTP");
 	    contbtn();
 	    Common.waitForElement(5);

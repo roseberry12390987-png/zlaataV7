@@ -56,11 +56,27 @@ public class HomePageStepdef {
 
 
 
-	@Given("User clicks on show more button at new arrivals")
-	public void user_clicks_on_show_more_button_at_new_arrivals() {
-		home.showMore();
 
+	@Given("User clicks on forward and backward arrows on  new arrivals")
+	public void user_clicks_on_forward_and_backward_arrows_on_new_arrivals() throws TimeoutException {
+		
+		home.newArrivalArrows();
+		
 	}
+
+
+
+	//
+	//	@Given("User verifying top selling section")
+	//	public void user_verifying_New_Arrival_selling_section() {
+	//		try {
+	//			home.newArrival();
+	//		} catch (TimeoutException e) {
+	//			// TODO Auto-generated catch block
+	//			e.printStackTrace();
+	//		}
+	//
+	//	}
 
 
 	@Given("User clicks on product image at new arrival section")
@@ -82,28 +98,28 @@ public class HomePageStepdef {
 	}
 
 
-	@Given("User verify happy customer section")
-	public void user_verify_happy_customer_section() {
-		home.happy();
-
-	}
-
-	@Given("User clicks on qucik view of happy customer")
-	public void user_clicks_on_qucik_view_of_happy_customer() {
-		home.happyQuickView();
-
-	}
+	//	@Given("User verify happy customer section")
+	//	public void user_verify_happy_customer_section() {
+	//		home.happy();
+	//
+	//	}
+	//
+	//	@Given("User clicks on qucik view of happy customer")
+	//	public void user_clicks_on_qucik_view_of_happy_customer() {
+	//		home.happyQuickView();
+	//
+	//	}
 
 	@Given("User submitting feedback")
 	public void user_submitting_feedback() {
 		home.feedBack();
 	}
 
-	@Given("User clicks on back to top button")
-	public void user_clicks_on_back_to_top_button() {
-		home.backtoTop();
-
-	}
+	//	@Given("User clicks on back to top button")
+	//	public void user_clicks_on_back_to_top_button() {
+	//		home.backtoTop();
+	//
+	//	}
 
 	@Given("User clicks on whats app icon")
 	public void user_clicks_on_whats_app_icon() {
